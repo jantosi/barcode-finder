@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Barcode Finder</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="add_barcode">Add barcode</string>
+    <string name="add_barcode_cancel">Cancel</string>
+
+    <string name="barcodenumber_modal_prompt">Enter new barcode numer to look for</string>
+    <string name="delete_barcode_list_element">Delete</string>
+    <string name="title_activity_simple_scanner">SimpleScannerActivity</string>
+    <string name="watchedbarcodes_preference_file_key">jantosi.personalproject.barcodefinder.watchedbarcodes</string>
+    <string name="barcode_list_element_notfound_status">No matches yet</string>
+    <string name="barcodes_list_element_found_status">Found %d times</string>
+</resources>
