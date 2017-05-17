@@ -2,22 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp">
 
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/barcodenumber_modal_prompt" />
 
     <EditText
         android:id="@+id/barcodenumber_modal_prompt_text_input"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="13"
         android:inputType="number"
-        android:layout_weight="1" />
+        android:layout_marginBottom="8dp"
+        />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/barcodeMatchModes">
+
+        <RadioButton
+            android:id="@+id/barcodeMatchModeStartsWith"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/barcode_starts_with_this_text" />
+
+        <RadioButton
+            android:id="@+id/barcodeMatchModeEndsWith"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/barcode_ends_with_this_text" />
+
+        <RadioButton
+            android:id="@+id/barcodeMatchModeContains"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/barcode_contains_this_text" />
+
+        <RadioButton
+            android:id="@+id/barcodeMatchModeExact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exact_match" />
+
+    </RadioGroup>
+
+
 
 </LinearLayout>

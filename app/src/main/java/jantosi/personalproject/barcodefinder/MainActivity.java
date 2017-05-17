@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
                 final View textInputModalView = LayoutInflater.from(alertDialogContext).inflate(R.layout.barcodenumber_modal, null);
                 final AlertDialog alertDialog = new AlertDialog.Builder(alertDialogContext)
+                        .setTitle(R.string.barcodenumber_modal_prompt_title)
                         .setView(textInputModalView)
                         .setCancelable(true)
                         .setPositiveButton(R.string.add_barcode, new DialogInterface.OnClickListener() {
