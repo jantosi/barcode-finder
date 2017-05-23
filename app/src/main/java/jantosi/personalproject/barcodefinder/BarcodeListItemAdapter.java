@@ -12,20 +12,20 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import jantosi.personalproject.barcodefinder.model.BarcodeToFind;
+
 /**
  * Created by Kuba on 01.05.2017.
  */
 
-public class BarcodeListItemAdapter<T> extends BaseAdapter implements ListAdapter {
+public class BarcodeListItemAdapter extends BaseAdapter implements ListAdapter {
 
-    private List<T> list;
+    private List<BarcodeToFind> list;
     private Context context;
-    private SharedPreferences sharedPref;
 
-    public BarcodeListItemAdapter(List<T> list, Context context, SharedPreferences sharedPref) {
+    public BarcodeListItemAdapter(List<BarcodeToFind> list, Context context) {
         this.list = list;
         this.context = context;
-        this.sharedPref = sharedPref;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BarcodeListItemAdapter<T> extends BaseAdapter implements ListAdapte
     }
 
     @Override
-    public T getItem(int position) {
+    public BarcodeToFind getItem(int position) {
         return list.get(position);
     }
 
@@ -45,7 +45,7 @@ public class BarcodeListItemAdapter<T> extends BaseAdapter implements ListAdapte
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final T item = getItem(position);
+        final BarcodeToFind item = getItem(position);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -53,10 +53,10 @@ public class BarcodeListItemAdapter<T> extends BaseAdapter implements ListAdapte
         }
 
         TextView codeTextView = (TextView) convertView.findViewById(R.id.barcodes_list_element_text);
-        codeTextView.setText(item.toString());
+        codeTextView.setText(item.getMatchMode() + ": " + item.getText());
 
         TextView codeStatusView = (TextView) convertView.findViewById(R.id.barcodes_list_element_status);
-        int count = sharedPref.getInt(item.toString(), 0);
+        int count = item.getNumMatches();
         if (count <= 0) {
             codeStatusView.setText(R.string.barcode_list_element_notfound_status);
         } else {
@@ -70,11 +70,19 @@ public class BarcodeListItemAdapter<T> extends BaseAdapter implements ListAdapte
             @Override
             public void onClick(View v) {
                 list.remove(position);
-                sharedPref.edit().remove(item.toString()).apply();
+                BarcodeToFind.delete(item);
                 notifyDataSetChanged();
             }
         });
 
         return convertView;
+    }
+
+    public List<BarcodeToFind> getList() {
+        return list;
+    }
+
+    public void setList(List<BarcodeToFind> list) {
+        this.list = list;
     }
 }

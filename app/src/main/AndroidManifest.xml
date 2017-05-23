@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name="jantosi.personalproject.barcodefinder.App">
 
         <meta-data android:name="DATABASE" android:value="barcodefinder.db" />
         <meta-data android:name="VERSION" android:value="2" />

@@ -5,5 +5,5 @@ package jantosi.personalproject.barcodefinder.model;
  */
 
 public enum MatchMode {
-    STARTS_WITH, ENDS_WITH, CONTAINS, EXACT
+    STARTS_WITH, ENDS_WITH, CONTAINS, EXACT;
 }

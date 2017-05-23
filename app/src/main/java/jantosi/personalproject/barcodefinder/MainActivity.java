@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,34 +18,30 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import jantosi.personalproject.barcodefinder.model.BarcodeToFind;
+import jantosi.personalproject.barcodefinder.model.MatchMode;
+import jantosi.personalproject.barcodefinder.model.viewmapper.MatchModeRadioButtonMapper;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
 
-    private ArrayList<String> watchedCodes = new ArrayList<>();
     private SharedPreferences sharedPref;
-    private BarcodeListItemAdapter<String> adapter;
+    private BarcodeListItemAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        restoreFields(savedInstanceState);
-
         sharedPref = this.getSharedPreferences(
                 getString(R.string.watchedbarcodes_preference_file_key), Context.MODE_PRIVATE);
-
-        //todo removeme debug
-        watchedCodes.add("5904825069301");
-        sharedPref.edit().putInt("5904825069301", 0).apply();
-        //
-
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,8 +66,14 @@ public class MainActivity extends AppCompatActivity {
                                 EditText editText = (EditText) textInputModalView
                                         .findViewById(R.id.barcodenumber_modal_prompt_text_input);
                                 String text = editText.getText().toString();
-                                watchedCodes.add(text);
-                                sharedPref.edit().putInt(text, 0).apply();
+
+                                RadioGroup matchModeRadios = (RadioGroup) textInputModalView.findViewById(R.id.barcodeMatchModes);
+                                MatchMode matchMode = MatchModeRadioButtonMapper.fromId(matchModeRadios.getCheckedRadioButtonId());
+                                BarcodeToFind.save(new BarcodeToFind(text, matchMode));
+
+                                List<BarcodeToFind> all = BarcodeToFind.find(BarcodeToFind.class, "text NOT NULL");
+                                adapter.setList(all);
+                                adapter.notifyDataSetChanged();
                             }
                         })
                         .setNegativeButton(R.string.add_barcode_cancel, new DialogInterface.OnClickListener() {
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
         // Add behaviour to ListView
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        adapter = new BarcodeListItemAdapter<>(watchedCodes, this, sharedPref);
+        List<BarcodeToFind> all = BarcodeToFind.find(BarcodeToFind.class, "text NOT NULL");
+        adapter = new BarcodeListItemAdapter(all, this);
         listView.setAdapter(adapter);
 
         askForNecessaryPermissions(this);
@@ -136,22 +138,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList("watchedCodes", watchedCodes);
-        super.onSaveInstanceState(outState);
-    }
-
-    private void restoreFields(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return;
-        }
-
-        if (savedInstanceState.containsKey("watchedCodes")) {
-            watchedCodes = savedInstanceState.getStringArrayList("watchedCodes");
-        }
-    }
-
     public void openBarcodeReaderActivity(View view) {
         Intent intent = new Intent(this, SimpleScannerActivity.class);
         startActivity(intent);
@@ -160,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
+        List<BarcodeToFind> all = BarcodeToFind.find(BarcodeToFind.class, "text NOT NULL");
+        adapter.setList(all);
         adapter.notifyDataSetChanged();
     }
 }

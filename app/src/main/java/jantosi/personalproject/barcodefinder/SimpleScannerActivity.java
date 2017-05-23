@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.google.zxing.Result;
 
+import java.util.List;
+
+import jantosi.personalproject.barcodefinder.model.BarcodeToFind;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static android.content.ContentValues.TAG;
@@ -51,17 +54,15 @@ public class SimpleScannerActivity extends Activity implements ZXingScannerView.
         // Vibrate for 500 milliseconds
         v.vibrate(150);
 
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                getString(R.string.watchedbarcodes_preference_file_key), Context.MODE_PRIVATE);
-
         String key = rawResult.getText();
-        if (sharedPref.contains(key)) {
+        List<BarcodeToFind> matches = BarcodeMatcher.matches(key);
+        if (!matches.isEmpty()) {
             // match!
 
-            int earlierValue = sharedPref.getInt(rawResult.getText(), 0);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(key, earlierValue+1);
-            editor.apply();
+            for (BarcodeToFind match : matches) {
+                match.setNumMatches(match.getNumMatches() + 1);
+            }
+            BarcodeToFind.saveInTx(matches);
 
             try {
                 Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

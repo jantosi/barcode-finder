@@ -9,6 +9,7 @@ import com.orm.SugarRecord;
 public class BarcodeToFind extends SugarRecord {
     String text;
     MatchMode matchMode;
+    int numMatches;
 
     public BarcodeToFind() {
     }
@@ -32,5 +33,13 @@ public class BarcodeToFind extends SugarRecord {
 
     public void setMatchMode(MatchMode matchMode) {
         this.matchMode = matchMode;
+    }
+
+    public int getNumMatches() {
+        return numMatches;
+    }
+
+    public void setNumMatches(int numMatches) {
+        this.numMatches = numMatches;
     }
 }
